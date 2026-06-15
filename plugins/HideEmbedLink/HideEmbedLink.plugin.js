@@ -1,7 +1,7 @@
 /**
  * @name HideEmbedLink
  * @description Hides embed messages link.
- * @version 2.2.7
+ * @version 2.2.8
  * @author Dastan
  * @authorId 310450863845933057
  * @source https://github.com/Dastan21/BDAddons/blob/main/plugins/HideEmbedLink
@@ -37,7 +37,7 @@ const HideIcon = BdApi.React.createElement('path', { fill: 'currentColor', d: 'M
 const hideLinksCache = {}
 
 class EyeIcon extends BdApi.React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -45,19 +45,19 @@ class EyeIcon extends BdApi.React.Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.setState({ show: !this.isHidden })
   }
 
-  get isHidden () {
+  get isHidden() {
     return Array.from(this.links ?? []).every(($l) => $l.classList?.contains('hel-hideLink') ?? false)
   }
 
-  get links () {
+  get links() {
     return document.querySelectorAll(`div[id^='message-content-${this.props.messageId}'] a.hel-embedLink[href="${this.props.url}"]`)
   }
 
-  render () {
+  render() {
     return BdApi.React.createElement('span', {
       className: `${embedSuppressButton} hel-eye`,
       onClick: () => {
@@ -76,13 +76,13 @@ class EyeIcon extends BdApi.React.Component {
 }
 
 module.exports = class HideEmbedLink {
-  constructor (meta) {
+  constructor(meta) {
     this.meta = meta
 
     this.settings = this.loadSettings()
   }
 
-  start () {
+  start() {
     this.patchMessageContent()
     this.patchEmbed()
     this.patchMessageAccessories()
@@ -90,12 +90,12 @@ module.exports = class HideEmbedLink {
     BdApi.DOM.addStyle(this.meta.name, this.css)
   }
 
-  stop () {
+  stop() {
     BdApi.DOM.removeStyle(this.meta.name)
     BdApi.Patcher.unpatchAll(this.meta.name)
   }
 
-  loadSettings () {
+  loadSettings() {
     const settingsData = BdApi.Data.load(this.meta.name, 'settings') ?? {}
     const settings = structuredClone(this.defaultSettings)
     this.prepareSettings(settings, settingsData)
@@ -117,7 +117,7 @@ module.exports = class HideEmbedLink {
     return settingsData
   }
 
-  prepareSettings (settings, settingsData) {
+  prepareSettings(settings, settingsData) {
     for (const setting of settings) {
       if (setting.type !== 'category') {
         if (!Object.hasOwn(settingsData, setting.id)) {
@@ -131,7 +131,7 @@ module.exports = class HideEmbedLink {
     }
   }
 
-  getSettingsPanel () {
+  getSettingsPanel() {
     const settings = structuredClone(this.defaultSettings)
 
     this.prepareSettings(settings, this.settings)
@@ -151,7 +151,7 @@ module.exports = class HideEmbedLink {
     })
   }
 
-  patchMessageContent () {
+  patchMessageContent() {
     const MessageContentModule = BdApi.Webpack.getModule(m => m.type != null && Object.keys(m).some(key => m[key]?.toString?.().includes('contentRef')))
     if (MessageContentModule?.type == null) {
       BdApi.Logger.error(this.meta.name, 'Cannot find MessageContent module')
@@ -162,7 +162,7 @@ module.exports = class HideEmbedLink {
       if (!props?.message?.embeds.length) return
 
       let hasEmbeds = false
-      ret.props.children[0].forEach(m => {
+      ret.props.children.find(c => Array.isArray(c))?.forEach(m => {
         if (m.props && this.hasEmbed(m, props.message.embeds)) {
           hasEmbeds = true
           m.props.className = 'hel-embedLink'
@@ -172,7 +172,7 @@ module.exports = class HideEmbedLink {
 
       props.message.showLinks = props.message.showLinks ?? false
       let i = 0
-      ret.props.children[0].forEach((m) => {
+      ret.props.children.find(c => Array.isArray(c))?.forEach((m) => {
         if (props.message.showLinks == null || m.props == null || !this.hasEmbed(m, props.message.embeds)) return
 
         const index = Math.min(i, props.message.embeds.length - 1)
@@ -184,7 +184,7 @@ module.exports = class HideEmbedLink {
     })
   }
 
-  patchEmbed () {
+  patchEmbed() {
     const EmbedModule = BdApi.Webpack.getModule(m => m.prototype?.constructor?.toString().includes('renderSuppressButton'), { searchExports: true })
     if (EmbedModule?.prototype?.render == null) {
       BdApi.Logger.error(this.meta.name, 'Cannot find Embed module')
@@ -206,7 +206,7 @@ module.exports = class HideEmbedLink {
     })
   }
 
-  patchMessageAccessories () {
+  patchMessageAccessories() {
     const MessageAccessoriesModule = BdApi.Webpack.getModule(m => m.prototype?.constructor?.toString().includes('attachmentToDelete'), { searchExports: true })
     if (MessageAccessoriesModule?.prototype?.render == null) {
       BdApi.Logger.error(this.meta.name, 'Cannot find MessageAccessories module')
@@ -231,13 +231,13 @@ module.exports = class HideEmbedLink {
     })
   }
 
-  hasEmbed (m, embeds) {
+  hasEmbed(m, embeds) {
     const embedURLs = embeds.map(e => e.url)
     if (!m.props) return false
     return m.type && this.isValid(m.props.href, embedURLs)
   }
 
-  isValid (href, urls = []) {
+  isValid(href, urls = []) {
     if (!href || !urls?.length) return false
 
     for (const url of urls) {
@@ -247,7 +247,7 @@ module.exports = class HideEmbedLink {
     return FIX_LIST.some(l => l.match.test(String(href)) && urls.includes(l.replace(href)))
   }
 
-  get css () {
+  get css() {
     return `
       div[id^="message-content-"]:not([class*="repliedTextContent"]) a.hel-embedLink.hel-hideLink,
       div[id^="message-content-"]:not([class*="repliedTextContent"]) span[class*="interactive"].hel-embedLink.hel-hideLink {
@@ -265,7 +265,7 @@ module.exports = class HideEmbedLink {
     `
   }
 
-  get defaultSettings () {
+  get defaultSettings() {
     return [
       {
         type: 'switch',
