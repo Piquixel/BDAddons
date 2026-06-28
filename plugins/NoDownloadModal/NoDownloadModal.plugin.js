@@ -9,12 +9,13 @@
  */
 
 module.exports = class NoDownloadModal {
-	load() {}
-	start() {
-		const SuspiciousDownload = BdApi.findAllModules(m => m?.isSuspiciousDownload).find(m => m?.__esModule)
-		BdApi.Patcher.after("suspicious-download", SuspiciousDownload, "isSuspiciousDownload", () => null)
-	}
-	stop() {
-		BdApi.Patcher.unpatchAll("suspicious-download")
-	}
+  load () {}
+  start () {
+    const SuspiciousDownload = BdApi.findAllModules(m => m?.isSuspiciousDownload).find(m => m?.__esModule)
+    BdApi.Patcher.after('suspicious-download', SuspiciousDownload, 'isSuspiciousDownload', () => null)
+  }
+
+  stop () {
+    BdApi.Patcher.unpatchAll('suspicious-download')
+  }
 }

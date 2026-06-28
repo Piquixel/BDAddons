@@ -9,8 +9,6 @@
  * @runAt idle
  */
 
-/* global BdApi */
-
 const { mkdir, lstat, readFileSync, writeFileSync } = require('fs')
 const path = require('path')
 
@@ -59,7 +57,7 @@ const classesFilters = {
   visual: ['nonVisualMediaItemContainer', 'nonVisualMediaItem', 'visualMediaItemContainer'],
 }
 
-async function loadClasses() {
+async function loadClasses () {
   const classModules = {}
   for (const key in classesFilters) {
     if (typeof classesFilters[key] === 'function') {
@@ -188,9 +186,9 @@ const LocaleStore = BdApi.Webpack.getStore('LocaleStore')
 const ElectronModule = BdApi.Webpack.getByKeys('setBadge')
 const Dispatcher = BdApi.Webpack.getByKeys('dispatch', 'subscribe', { searchExports: true })
 const ComponentDispatch = BdApi.Webpack.getAllByKeys('safeDispatch', 'dispatchToLastSubscribed', { searchExports: true })?.find(m => m.options?.logger != null)
-const ExpressionPicker = BdApi.Webpack.getModule(m => m.type?.toString?.().includes("onSelectGIF"), { searchExports: true })
+const ExpressionPicker = BdApi.Webpack.getModule(m => m.type?.toString?.().includes('onSelectGIF'), { searchExports: true })
 const EPS = {}
-const EPSModules = BdApi.Webpack.getModule(BdApi.Webpack.Filters.bySource("lastActiveView", "isSearchSuggestion"))
+const EPSModules = BdApi.Webpack.getModule(BdApi.Webpack.Filters.bySource('lastActiveView', 'isSearchSuggestion'))
 const EPSConstants = BdApi.Webpack.getModule(BdApi.Webpack.Filters.byKeys('FORUM_CHANNEL_GUIDELINES', 'CREATE_FORUM_POST'), { searchExports: true })
 const GIFUtils = (() => {
   const modules = BdApi.Webpack.getModules(m => m.toString?.()?.includes('updateAsync("favoriteGifs'), { searchExports: true })
@@ -201,9 +199,9 @@ const GIFUtils = (() => {
 })()
 // https://github.com/TheLazySquid/BetterDiscordPlugins/blob/02f5e1c6c9ae2d47a6289d5868cc7ed5e4607e2d/plugins/ImageFolder/ImageFolder.plugin.js#L150
 const ChannelTextArea = Object.values(BdApi.Webpack.getModule((m) => Object.values(m).some((e) => {
-  let str = e?.type?.render?.toString?.();
-  if (!str) return false;
-  return str.includes("pendingScheduledMessage") && str.includes(".CHANNEL_TEXT_AREA");
+  const str = e?.type?.render?.toString?.()
+  if (!str) return false
+  return str.includes('pendingScheduledMessage') && str.includes('.CHANNEL_TEXT_AREA')
 })))?.find((e) => e.type)
 const Permissions = BdApi.Webpack.getByKeys('computePermissions')
 const PermissionsConstants = BdApi.Webpack.getModule(BdApi.Webpack.Filters.byKeys('ADD_REACTIONS'), { searchExports: true })
@@ -212,7 +210,7 @@ const MessagesManager = BdApi.Webpack.getModule(BdApi.Webpack.Filters.byKeys('se
 const RestAPI = BdApi.Webpack.getModule(m => typeof m === 'object' && m.del && m.put, { searchExports: true })
 
 let PageControl
-BdApi.Webpack.waitForModule(m => typeof m === 'function' && m.toString()?.includes('maxVisiblePages') && m.toString()?.includes('disablePaginationGap'), { searchExports: true }).then(m => PageControl = m)
+BdApi.Webpack.waitForModule(m => typeof m === 'function' && m.toString()?.includes('maxVisiblePages') && m.toString()?.includes('disablePaginationGap'), { searchExports: true }).then(m => (PageControl = m))
 
 const canClosePicker = { context: '', value: true }
 let currentChannelId = ''
@@ -990,9 +988,9 @@ class ImportPanel extends BdApi.React.Component {
         className: 'fm-importActions',
       },
       BdApi.React.createElement('div', {
-        style: { color: "var(--text-feedback-critical)" }
+        style: { color: 'var(--text-feedback-critical)' }
       },
-        plugin.instance.strings.import.alert
+      plugin.instance.strings.import.alert
       ),
       !this.isEmpty && !this.state.imported
         ? BdApi.React.createElement(BdApi.Components.Button, {
@@ -1621,7 +1619,7 @@ class MediaCard extends BdApi.React.Component {
         height: this.props.positions.height,
         ref: this.mediaRef,
         controls: this.state.showControls,
-        controlsList: "nofullscreen",
+        controlsList: 'nofullscreen',
         style: !MediaFavButton.hasPreview(this.props.type) ? { position: 'absolute', bottom: '0', left: '0', 'z-index': '2' } : null,
         draggable: false,
         onError: this.onError,
@@ -1839,7 +1837,7 @@ class MediaPicker extends BdApi.React.Component {
     const width = this.state.contentWidth || 200
     const n = Math.floor(width / 200)
     const offset = this.currentPageCategories.length
-    const placed = Array.from({ length: n})
+    const placed = Array.from({ length: n })
     placed.fill(false)
     placed.fill(true, 0, offset % n)
     const itemWidth = (width - (12 * (n - 1))) / n
@@ -2497,7 +2495,7 @@ class MediaPicker extends BdApi.React.Component {
         fillRule: 'evenodd',
         clipRule: 'evenodd',
       })
-      ),
+      )
       ),
       BdApi.React.createElement('input', {
         className: classes.medium.input,
@@ -2511,35 +2509,35 @@ class MediaPicker extends BdApi.React.Component {
         },
       }),
       this.state.textFilter && !this.state.category
-      ? BdApi.React.createElement('div', {
-        className: classes.medium.clearButton,
-        role: 'button',
-        tabindex: '0',
-        onClick: this.clearSearch,
-      },
-      BdApi.React.createElement('svg', {
-        ariaHidden: true,
-        width: '16',
-        height: '16',
-        viewBox: '0 0 24 24',
-        fill: 'none',
-        role: 'img'
-      },
-      BdApi.React.createElement('circle', {
-        cx: '12',
-        cy: '12',
-        r: '10',
-        fill: 'transparent'
-      }),
-      BdApi.React.createElement('path', {
-        fill: 'currentColor',
-        d: 'M12 23a11 11 0 1 0 0-22 11 11 0 0 0 0 22Zm4.7-15.7a1 1 0 0 0-1.4 0L12 10.58l-3.3-3.3a1 1 0 0 0-1.4 1.42L10.58 12l-3.3 3.3a1 1 0 1 0 1.42 1.4L12 13.42l3.3 3.3a1 1 0 0 0 1.4-1.42L13.42 12l3.3-3.3a1 1 0 0 0 0-1.4Z',
-        fillRule: 'evenodd',
-        clipRule: 'evenodd',
-      })
-      )
-      )
-      : null,
+        ? BdApi.React.createElement('div', {
+          className: classes.medium.clearButton,
+          role: 'button',
+          tabindex: '0',
+          onClick: this.clearSearch,
+        },
+        BdApi.React.createElement('svg', {
+          ariaHidden: true,
+          width: '16',
+          height: '16',
+          viewBox: '0 0 24 24',
+          fill: 'none',
+          role: 'img'
+        },
+        BdApi.React.createElement('circle', {
+          cx: '12',
+          cy: '12',
+          r: '10',
+          fill: 'transparent'
+        }),
+        BdApi.React.createElement('path', {
+          fill: 'currentColor',
+          d: 'M12 23a11 11 0 1 0 0-22 11 11 0 0 0 0 22Zm4.7-15.7a1 1 0 0 0-1.4 0L12 10.58l-3.3-3.3a1 1 0 0 0-1.4 1.42L10.58 12l-3.3 3.3a1 1 0 1 0 1.42 1.4L12 13.42l3.3 3.3a1 1 0 0 0 1.4-1.42L13.42 12l3.3-3.3a1 1 0 0 0 0-1.4Z',
+          fillRule: 'evenodd',
+          clipRule: 'evenodd',
+        })
+        )
+        )
+        : null
       )
       : null
     )
@@ -3230,12 +3228,12 @@ module.exports = class FavoriteMedia {
     BdApi.Patcher.after(this.meta.name, ExpressionPicker, 'type', (_, __, returnValue) => {
       if (returnValue.props?.children?.props?.children == null) return returnValue
 
-      const unpatch = BdApi.Patcher.after(this.meta.name, returnValue.props.children.props, "children", (_, __, returnValue) => {
-        unpatch();
-        if (returnValue == null) return returnValue;
+      const unpatch = BdApi.Patcher.after(this.meta.name, returnValue.props.children.props, 'children', (_, __, returnValue) => {
+        unpatch()
+        if (returnValue == null) return returnValue
 
-        const body = BdApi.Utils.findInTree(returnValue, (el) => el?.[0]?.type === "nav", { walkable: ["props", "children"] })
-        const head = BdApi.Utils.findInTree(body, (el) => el?.[0]?.props?.["aria-selected"] !== void 0, { walkable: ["props", "children"] })
+        const body = BdApi.Utils.findInTree(returnValue, (el) => el?.[0]?.type === 'nav', { walkable: ['props', 'children'] })
+        const head = BdApi.Utils.findInTree(body, (el) => el?.[0]?.props?.['aria-selected'] !== undefined, { walkable: ['props', 'children'] })
         if (head == null || body == null) return returnValue
 
         try {
@@ -3409,7 +3407,7 @@ module.exports = class FavoriteMedia {
     let GIFPicker = null
     try {
       GIFPicker = await this.waitGIFPicker()
-    } catch(err) {
+    } catch (err) {
       BdApi.Logger.error(this.meta.name, 'GIFPicker module not found')
       return
     }
