@@ -1,0 +1,29 @@
+{
+  "arrowParens": "always",
+  "bracketSpacing": true,
+  "jsxSingleQuote": true,
+  "objectWrap": "collapse",
+  "overrides": [
+    {
+      "files": ".vscode/*.json",
+      "options": {
+        "parser": "jsonc"
+      }
+    },
+    {
+      "files": [
+        "**/*.json",
+        "**/.prettierrc"
+      ],
+      "options": {
+        "plugins": [
+          "prettier-plugin-expand-json"
+        ]
+      }
+    }
+  ],
+  "proseWrap": "preserve",
+  "quoteProps": "as-needed",
+  "semi": false,
+  "trailingComma": "none"
+}

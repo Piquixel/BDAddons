@@ -3,10 +3,14 @@
   "author": "Dastan21",
   "license": "GPL-3.0",
   "devDependencies": {
-    "@eslint/js": "^9.20.0",
-    "eslint": "^9.20.1",
-    "globals": "^15.15.0",
-    "neostandard": "^0.12.1"
+    "@types/betterdiscord": "github:zerthox/betterdiscord-types",
+    "@types/node": "^26.0.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.4",
+    "neostandard": "^0.13.0",
+    "prettier": "^3.8.5",
+    "prettier-plugin-expand-json": "^1.0.5"
   },
-  "packageManager": "pnpm@10.4.1"
+  "packageManager": "pnpm@11.9.0"
 }
